@@ -12,7 +12,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -41,7 +41,7 @@
   http://nootropicdesign.com/audiohacker/projects.html
  */
 
-  
+
 
 #include <EEPROM.h>
 #include <AudioHacker.h>
@@ -76,7 +76,7 @@ boolean evenCycle = true;
 
 // set to true if you are using a battery backup on the
 // SRAM and want to keep sample address info in EEPROM
-boolean batteryBackup = true; 
+boolean batteryBackup = true;
 
 unsigned int recordStartTime;
 unsigned int recordEndTime;
@@ -97,7 +97,7 @@ void setup() {
   pinMode(SAMPLE1_BUTTON, INPUT);
   pinMode(SAMPLE2_BUTTON, INPUT);
   pinMode(SAMPLE3_BUTTON, INPUT);
-  
+
   digitalWrite(RECORD_BUTTON, HIGH);
   digitalWrite(SAMPLE0_BUTTON, HIGH);
   digitalWrite(SAMPLE1_BUTTON, HIGH);
@@ -140,13 +140,13 @@ void setup() {
       endAddress[i] |= b;
 
       if (endAddress[i] > 0) {
-	sampleRecorded[i] = true;
+	       sampleRecorded[i] = true;
 #ifdef DEBUG
-	Serial.print("sample ");
-	Serial.print(i);
-	Serial.print(" endAddress = ");
-	Serial.print(endAddress[i]);
-	Serial.println();
+	       Serial.print("sample ");
+	       Serial.print(i);
+	       Serial.print(" endAddress = ");
+	       Serial.print(endAddress[i]);
+	       Serial.println();
 #endif
       }
     }
@@ -154,7 +154,6 @@ void setup() {
 }
 
 void loop() {
-
 
 #ifdef DEBUG
   if ((millis() - lastDebugPrint) >= 1000) {
@@ -183,57 +182,57 @@ void loop() {
       // enter RECORD mode
       recordStartTime = millis();
       if ((recordStartTime - recordEndTime) < 20) {
-	// debounce the record button.
-	recordStartTime = 0;
-	return;
+        // debounce the record button.
+        recordStartTime = 0;
+        return;
       }
       if (digitalRead(SAMPLE0_BUTTON) == LOW) {
-	sample = 0;
-	address = 0;
-	addressChipNumber = 0;
+        sample = 0;
+        address = 0;
+        addressChipNumber = 0;
       }
       if (digitalRead(SAMPLE1_BUTTON) == LOW) {
-	sample = 1;
-	address = 65535;
-	addressChipNumber = 0;
+        sample = 1;
+        address = 65535;
+        addressChipNumber = 0;
       }
       if (digitalRead(SAMPLE2_BUTTON) == LOW) {
-	sample = 2;
-	address = 0;
-	addressChipNumber = 1;
+        sample = 2;
+        address = 0;
+        addressChipNumber = 1;
       }
       if (digitalRead(SAMPLE3_BUTTON) == LOW) {
-	sample = 3;
-	address = 65535;
-	addressChipNumber = 1;
+        sample = 3;
+        address = 65535;
+        addressChipNumber = 1;
       }
       mode = RECORD;
       timer1Start = UINT16_MAX - (F_CPU / recordingSampleRate);
     } else {
       // enter PLAYBACK mode
       if ((digitalRead(SAMPLE0_BUTTON) == LOW) && (sampleRecorded[0])) {
-	address = 0;
-	addressChipNumber = 0;
-	sample = 0;
-	mode = PLAYBACK;
+        address = 0;
+        addressChipNumber = 0;
+        sample = 0;
+        mode = PLAYBACK;
       }
       if ((digitalRead(SAMPLE1_BUTTON) == LOW) && (sampleRecorded[1])) {
-	address = 65535;
-	addressChipNumber = 0;
-	sample = 1;
-	mode = PLAYBACK;
+        address = 65535;
+        addressChipNumber = 0;
+        sample = 1;
+        mode = PLAYBACK;
       }
       if ((digitalRead(SAMPLE2_BUTTON) == LOW) && (sampleRecorded[2])) {
-	address = 0;
-	addressChipNumber = 1;
-	sample = 2;
-	mode = PLAYBACK;
+        address = 0;
+        addressChipNumber = 1;
+        sample = 2;
+        mode = PLAYBACK;
       }
       if ((digitalRead(SAMPLE3_BUTTON) == LOW) && (sampleRecorded[3])) {
-	address = 65535;
-	addressChipNumber = 1;
-	sample = 3;
-	mode = PLAYBACK;
+        address = 65535;
+        addressChipNumber = 1;
+        sample = 3;
+        mode = PLAYBACK;
       }
     }
   }
@@ -244,42 +243,41 @@ void loop() {
 
   if (mode == RECORD) {
     digitalWrite(A4, HIGH);
-  
-    if (((sample == 0) && (digitalRead(SAMPLE0_BUTTON) == HIGH)) || 
-	((sample == 1) && (digitalRead(SAMPLE1_BUTTON) == HIGH)) || 
-	((sample == 2) && (digitalRead(SAMPLE2_BUTTON) == HIGH)) || 
-	((sample == 3) && (digitalRead(SAMPLE3_BUTTON) == HIGH))) {
-      // recording stopped
-      recordEndTime = millis();
-      if (recordEndTime - recordStartTime < 20) {
-	// debounce
-	return;
-      }
-      sampleRecorded[sample] = true;
-      endAddress[sample] = address;
+
+    if (((sample == 0) && (digitalRead(SAMPLE0_BUTTON) == HIGH)) ||
+        ((sample == 1) && (digitalRead(SAMPLE1_BUTTON) == HIGH)) ||
+        ((sample == 2) && (digitalRead(SAMPLE2_BUTTON) == HIGH)) ||
+        ((sample == 3) && (digitalRead(SAMPLE3_BUTTON) == HIGH))) {
+          // recording stopped
+          recordEndTime = millis();
+          if (recordEndTime - recordStartTime < 20) {
+            // debounce
+            return;
+          }
+          sampleRecorded[sample] = true;
+          endAddress[sample] = address;
 #ifdef DEBUG
-      Serial.print("sample ");
-      Serial.print(sample);
-      Serial.print(" recording time = ");
-      Serial.print(recordEndTime - recordStartTime);
-      Serial.println(" ms");
-      Serial.print(" endAddress = ");
-      Serial.println(endAddress[sample]);
+          Serial.print("sample ");
+          Serial.print(sample);
+          Serial.print(" recording time = ");
+          Serial.print(recordEndTime - recordStartTime);
+          Serial.println(" ms");
+          Serial.print(" endAddress = ");
+          Serial.println(endAddress[sample]);
 #endif
 
-      if (batteryBackup) {
-	// Write endAddress to EEPROM for battery backup use.
-	byte a = sample*3;
-	EEPROM.write(a, (endAddress[sample] >> 16) & 0xFF);
-	EEPROM.write(a+1, (endAddress[sample] >> 8) & 0xFF);
-	EEPROM.write(a+2, endAddress[sample] & 0xFF);
-      }
-      mode = PASSTHROUGH;
-    }
+          if (batteryBackup) {
+            // Write endAddress to EEPROM for battery backup use.
+            byte a = sample*3;
+            EEPROM.write(a, (endAddress[sample] >> 16) & 0xFF);
+            EEPROM.write(a+1, (endAddress[sample] >> 8) & 0xFF);
+            EEPROM.write(a+2, endAddress[sample] & 0xFF);
+          }
+          mode = PASSTHROUGH;
+        }
   } else {
     digitalWrite(A4, LOW);
   }
-
 
   if (mode == RECORD_DONE) {
     if (recordStartTime != 0) {
@@ -296,11 +294,11 @@ void loop() {
       recordStartTime = 0;
 
       if (batteryBackup) {
-	// Write endAddress to EEPROM for battery backup use.
-	byte a = sample*3;
-	EEPROM.write(a, (endAddress[sample] >> 16) & 0xFF);
-	EEPROM.write(a+1, (endAddress[sample] >> 8) & 0xFF);
-	EEPROM.write(a+2, endAddress[sample] & 0xFF);
+        // Write endAddress to EEPROM for battery backup use.
+        byte a = sample*3;
+        EEPROM.write(a, (endAddress[sample] >> 16) & 0xFF);
+        EEPROM.write(a+1, (endAddress[sample] >> 8) & 0xFF);
+        EEPROM.write(a+2, endAddress[sample] & 0xFF);
       }
     }
     if (digitalRead(RECORD_BUTTON) == HIGH) {
@@ -311,12 +309,12 @@ void loop() {
 
   if (mode == PLAYBACK) {
     digitalWrite(A5, HIGH);
-    if (((sample == 0) && (digitalRead(SAMPLE0_BUTTON) == HIGH)) || 
-	((sample == 1) && (digitalRead(SAMPLE1_BUTTON) == HIGH)) || 
-	((sample == 2) && (digitalRead(SAMPLE2_BUTTON) == HIGH)) || 
-	((sample == 3) && (digitalRead(SAMPLE3_BUTTON) == HIGH))) {
-      // play button released
-      mode = PASSTHROUGH;
+    if (((sample == 0) && (digitalRead(SAMPLE0_BUTTON) == HIGH)) ||
+        ((sample == 1) && (digitalRead(SAMPLE1_BUTTON) == HIGH)) ||
+        ((sample == 2) && (digitalRead(SAMPLE2_BUTTON) == HIGH)) ||
+        ((sample == 3) && (digitalRead(SAMPLE3_BUTTON) == HIGH))) {
+          // play button released
+          mode = PASSTHROUGH;
     } else {
       timer1Start = UINT16_MAX - (F_CPU / recordingSampleRate);
     }
@@ -334,7 +332,6 @@ ISR(TIMER1_OVF_vect) {
     AudioHacker.writeDAC(playbackBuf);
   }
 
-
   if ((mode != PLAYBACK) && (mode != RECORD_DONE)) {
     // Read ADC
     signal = AudioHacker.readADC();
@@ -349,13 +346,13 @@ ISR(TIMER1_OVF_vect) {
       AudioHacker.writeSRAMPacked(addressChipNumber, address, writeBuf, signal);
 
       address += 3;
-      if (((sample == 0) && (address > 65532)) || 
-	  ((sample == 1) && (address > MAX_ADDR)) || 
-	  ((sample == 2) && (address > 65532)) || 
-	  ((sample == 3) && (address > MAX_ADDR))) {
-	// end of memory, stop recording
-	mode = RECORD_DONE;
-	endAddress[sample] = address;
+      if (((sample == 0) && (address > 65532)) ||
+          ((sample == 1) && (address > MAX_ADDR)) ||
+          ((sample == 2) && (address > 65532)) ||
+          ((sample == 3) && (address > MAX_ADDR))) {
+            // end of memory, stop recording
+            mode = RECORD_DONE;
+            endAddress[sample] = address;
       }
     }
   }
@@ -369,20 +366,20 @@ ISR(TIMER1_OVF_vect) {
 
       address += 3;
       if ((sample == 0) && (address == endAddress[0])) {
-	address = 0;
-	addressChipNumber = 0;
+        address = 0;
+        addressChipNumber = 0;
       }
       if ((sample == 1) && (address == endAddress[1])) {
-	address = 65535;
-	addressChipNumber = 0;
+        address = 65535;
+        addressChipNumber = 0;
       }
       if ((sample == 2) && (address == endAddress[2])) {
-	address = 0;
-	addressChipNumber = 1;
+        address = 0;
+        addressChipNumber = 1;
       }
       if ((sample == 3) && (address == endAddress[3])) {
-	address = 65535;
-	addressChipNumber = 1;
+        address = 65535;
+        addressChipNumber = 1;
       }
     } else {
       signal = readBuf[1];
@@ -400,5 +397,3 @@ ISR(TIMER1_OVF_vect) {
 #endif
   evenCycle = !evenCycle;
 }
-
-
